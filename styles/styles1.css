@@ -1,0 +1,89 @@
+body{
+    margin: 0 auto;
+    padding: 0 auto;
+}
+.section-1{
+    border: 1.5px solid rgb(80, 38, 8);
+    border-width: 1px;
+    text-align: center;
+    flex-wrap: wrap;
+}
+
+.Buttons-Div{
+    align-items: center;
+    display: flex !important;
+    justify-content: space-around;
+    padding: 10px;
+    border: 1.2px solid black;
+}
+
+#results-div>h1{
+    text-align: center;
+    font-size: 2em;
+    
+}
+#resetBtn{
+margin-left: -15px;
+}
+#cickmeBtn{
+margin-right: 15px;
+}
+/* #cickmeBtn{
+    background-color: rgb(12, 12, 231);
+    padding: 7px;
+    border-radius: 8px;
+    margin-right: 10px;
+    
+     */
+
+
+     .section-2{
+    border: 1.5px solid red;
+    width: 79%;
+    overflow-block: hidden;
+    margin: 0 auto;
+     }
+
+     .section-2>div, .flx-bx-PickColor-cntr {
+    
+
+         display: flex;
+         flex-wrap: wrap;
+         flex-direction: row;
+         justify-content: space-around;
+         padding: 12px;
+         border: 1.2px solid blue;
+         overflow: hidden;
+     }
+     .cat-pics-div>img{
+        border: 1px gray solid;
+        margin: 8px;
+        padding: 11px;
+        box-shadow:0px 10px 50px rgba(0, 0, 0, 0.7);
+     }
+     /*  Rock Paper Scissors */
+
+     .section-3,.flx-bx-PickColor-cntr, .section-5{
+        margin: 0 auto;
+        width: 79%;
+        border: 1.5px solid black;
+        border-bottom-color: rgba(0, 0, 0, 0.6);
+     }
+     .RocPapScis-div{
+         display: flex;
+         flex-wrap: wrap;
+         justify-content: space-evenly;
+         flex-direction: row;
+     }
+     .RocPapScis-div>img:hover{
+        box-shadow: 0px 10px 50px rgba(37, 50, 233, 1) ;
+        
+    }
+     
+    /*   BLACK JACK    */
+
+    .blackjack-row2-deck{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }

@@ -1,0 +1,247 @@
+let TitleH1Tag =document.getElementById("header");
+console.log(TitleH1Tag);
+TitleH1Tag.innerHTML="Its Game Timee";
+document.getElementById("results-div").style.display='none'
+// var textAnswer= document.createTextNode('Your are'+ AgeIndays+ 'Old!!)
+//      YOUR AGE IN DAYS
+
+
+// Create elements and attach content to it
+
+//  
+/*
+
+var h1= document.createElement('h1');// Create element
+var textAnswer = document.createTextNode('Your are' + AgeIndays+ 'Days Old!!')
+h1.setAttribute('id', 'ageInDays');// apply an attribute to an element basically --> <h1 id="ageInDays"></h1>
+h1.appendChild(textAnswer)//applying text content to element -->  <h1>
+document.getElementById('results-div').appendChild(h1)// apply h1 to the results div container
+
+
+*/
+
+AgeinDaysFunction=()=>{
+    var AgeIndays=0;
+    var age = prompt("what is your age?");
+    var AgeIndays= age*365;
+    document.getElementById("ageindays").append(AgeIndays);
+    document.getElementById("results-div").style.display='inline-block';
+}
+
+reset=()=>{
+    var AgeIndays=0;
+    document.getElementById("ageindays").nodeValue=' '
+  //  document.getElementById("ageindays").remove();
+    document.getElementById("Results-output").remove();
+    
+}
+
+
+//<------------------------CAT GENERATOR-------------------->
+
+GenerateCat=()=>{
+    
+    // const request = async () => {
+    //     url ='http://thecatapi.com/api/images/get?format=src&type=gif&size=small';
+    //     const response = await fetch(url);
+    //     //const json = await JSON.stringify(response.json());
+    //     return response;
+    // }
+    ImgUrl ='http://thecatapi.com/api/images/get?format=src&type=gif&size=small';
+    var Catdiv =document.getElementById("cat-pics-div");
+    var image = document.createElement('img');
+    image.src=ImgUrl;
+    image.setAttribute('id', 'catImg');
+    Catdiv.appendChild(image);
+}
+RemoveCats=()=>{
+    document.getElementById('cat-pics-div').remove();
+}
+
+
+// <------------------------- Rock Paper Scissors ---------------------------------->
+// Computer player Bot has to choose randomly 
+
+
+
+RpsGame=(yourChoice)=>{// passing in user choice
+     console.log(yourChoice);
+// we need human choice and a bot choice / Pc 
+    var humanChoice, botChoice;
+    humanChoice= yourChoice.id
+    //<------BOT CHOICE------->
+    botChoice= numberToChoice(randToRpsIntNumba());
+    console.log('Computer Choice -->', botChoice);
+    console.log('humanChoice-->', yourChoice);
+
+ results = decideWinner(humanChoice, botChoice)// state wether winner is the bot or human/User
+ console.log(results)
+   resultsMessage = finalMessage(results);
+   console.log(resultsMessage);
+  rspFrontEnd(humanChoice, botChoice,resultsMessage )
+}
+
+randToRpsIntNumba=()=>(// a simple function to return the result of random Math integer
+     Math.floor(Math.random() * 3)
+)
+
+numberToChoice=(number)=>(// takes in a number returns the choice of that number/integer
+    ['rock', 'paper', ' scissors',][number]
+)
+
+/*
+ this function is the backbone of the RPS game  
+ THIS FUNCTION decides the lOGIC & Possible outcome of each action taken , like an IF eLSE STATEMNT
+ For example :
+ *if user choose 'rock' ,and Computer choose 'scissors'   return 'Player win!'
+ *if user choose 'rock' ,and Computer choose 'paper'   return 'Computer win!'
+ * if user choose 'rock' ,and Computer choose 'rock'   return 'Draw!'
+*/
+
+decideWinner=(yourChoice,computerChoice)=>{//function to decide winner Bot or Human
+ var RpsGameplayData = {//--->Is an object variable which contains all functionality possible outcomes
+   /* based on  the id  rock ,paper or scissors is chosen
+    *number 1 represents a 'win' & number 0 respresents a 'lose'
+        Each key id has an object dictionary wit an if else output set up
+    */  
+    'rock': {'scissors':1, 'rock':0.5, 'paper':0},
+    'paper': {'rock': 1,'paper': 0.5, 'scissors':0},
+    'scissors':{'paper': 1, 'scissors': 0.5, 'rock':0}
+ }
+ /*  */
+  var yourScore= RpsGameplayData[yourChoice][computerChoice];
+  var computerScore= RpsGameplayData[computerChoice][yourChoice];
+
+  return [yourScore, computerScore]
+}
+
+finalMessage=(yourScore,computerScore)=>{
+    if (yourScore === 1) {   
+        return{'message': 'You Win!', 'color': 'green'}
+    } else if (yourScore === 0) {
+        return {'message': 'Its a Tie!', 'color': 'yellow'} 
+    } else  {
+        return {'message':'You Lose!', 'color': 'red' }
+    }
+}
+
+
+rspFrontEnd=(humanImageChoice, botImageChoice,resultsMessage )=>{
+    var imagesDataBase = {
+        "rock": document.getElementById('rock').src,
+        "paper": document.getElementById('paper').src,
+        "scissors": document.getElementById('scissors').src
+    }
+    //   imagesDataBase["paper"], imagesDataBase["rock"]
+
+    //  Lets remove all images
+
+    document.getElementById('rock').remove();
+    document.getElementById('paper').remove();
+    document.getElementById('scissors').remove();
+
+    //  Create divs for the images using javascript screatElememt
+    var humanDiv = document.createElement('div');
+    var botDiv = document.createElement('div');
+    var messageDiv = document.createElement('div'); 
+
+    // Later in the course we will see the ADVACE way of styling img tage but for now the Raw way of doing using images in Js 
+
+    humanDiv.innerHTML= "<img src='" + imagesDataBase[humanImageChoice] + "' height=150 width=150 style='box-shadow: 0px 10px 50px rgba(37, 50, 233, 1);'>"
+    botDiv.innerHTML= "<img src='" + imagesDataBase[botImageChoice] + "' height=150 width=150 style='box-shadow: 0px 10px 50px rgba(243, 30, 24, 1);'>"
+    messageDiv.innerHTML= "<h1 style='color:" + resultsMessage['color']+ "; font-size: 40px; padding: 20px; '>" + resultsMessage['message'] + "</h1>"
+    
+    document.getElementById('RocPapScis-div').appendChild(humanDiv);
+    document.getElementById('RocPapScis-div').appendChild(messageDiv);
+    document.getElementById('RocPapScis-div').appendChild(botDiv);
+} 
+
+var NayMessage =(` 
+    <div className="mainCnter">
+        <center style="padding: 2; border-radius: 8px; border:2px groove green;"><h1 style="text-decoration: underline; font-weight:700;">Welcome to all</h1>
+        <img src="https://s3.amazonaws.com/images.seroundtable.com/google-images-1548419288.jpg" width="600" height="220" alt="">
+        </center>
+    </div>` );
+
+//    document.getElementById("testing").innerHTML=NayMessage;
+
+//    Challenge 4: CHange the Colors of All Buttons
+
+    let all_btns = document.getElementsByTagName("button");
+    // Before we reset all the button colors , we have to create a var a copy of it to remember it
+    let copyAllBtns =[];
+    for (let i=0;i < all_btns.length; i++){  //as long as i is less than the amount (length) of buttons we have find more, basically get all the buttons
+      // since there are 7 buttons this loop will run 7 times
+        
+      copyAllBtns.push(all_btns[i].classList[1]) //Since its in an Array[] we can access all btns the all btns classnames (classList[1])
+
+    }
+    console.log(copyAllBtns);
+
+    BtnColorChanger=(buttonThingy)=>{
+        if (buttonThingy.value === 'red') {
+            buttonRed();
+        }   else if (buttonThingy.value === 'green'){
+            buttonGreen();
+        }   else if (buttonThingy.value === 'random'){
+            buttonRandom();
+        }   else if (buttonThingy.value === 'reset') {
+            buttonColorReset();
+        }
+    }
+
+
+//  All the Color Functions
+
+    buttonRed=()=>{
+       for (let i=0;i < all_btns.length; i++) {
+
+       
+        all_btns[i].classList.remove(all_btns[i].classList[1])//Access all btns and remove the 2nd classnames classlist[1]= class="btn  btn-primary" 
+        all_btns[i].classList.add("btn-danger");
+       }
+    }
+
+    buttonGreen=()=>{
+        for (let i=0;i < all_btns.length; i++) {
+
+       
+            all_btns[i].classList.remove(all_btns[i].classList[1])//Access all btns and remove the 2nd classnames classlist[1]= class="btn  btn-primary" 
+            all_btns[i].classList.add("btn-success");
+           }
+    }
+
+    buttonColorReset=()=>{
+        for (let i=0;i < all_btns.length; i++) {
+
+       
+            all_btns[i].classList.remove(all_btns[i].classList[1])//Access all btns and remove the 2nd classnames classlist[1]= class="btn  btn-primary" 
+            all_btns[i].classList.add(copyAllBtns[i]);
+           }
+    }
+/*
+let ConsoleExample= (
+    Array(8)0: button#cickmeBtn.btn.btn-primary1: button#resetBtn.btn.btn-danger2: button#cat-get-btn.btn.btn-success3: button#catImg.btn.btn-danger4: button.btn.btn-primary5: button.btn.btn-success6: button.btn.btn-danger7: button.btn.btn-warninglength: 8[[Prototype]]: Array(0)
+IndexPage.html:89 Live reload enabled.
+copyAllBtns[0]
+<button id=​"cickmeBtn" onclick=​"{AgeinDaysFunction()​}​" class=​"btn btn-primary">​Click Me​</button>​
+copyAllBtns[0].classList
+DOMTokenList(2) ["btn", "btn-primary", value: "btn btn-primary"]0: "btn"1: "btn-primary"length: 2value: "btn btn-primary"[[Prototype]]: DOMTokenList
+copyAllBtns[0].classList.remove("btn-primary");
+copyAllBtns[0].classList.add("btn-success"); //put back element (button)
+)
+*/
+
+buttonRandom=()=>{
+    // create a Var with all the colors to be selected from randomly
+    let Choices= ['btn-primary', 'btn-success', 'btn-warning', 'btn-danger']
+
+    for (i=0; i < all_btns.length; i++) {
+        var randomNumber = Math.floor(Math.random() * 4);// Get a random number from 1-4
+        all_btns[i].classList.remove(all_btns[i].classList[1]) //Remove all secondary classnames
+        all_btns[i].classList.add(Choices[randomNumber])
+
+    }
+
+
+}
