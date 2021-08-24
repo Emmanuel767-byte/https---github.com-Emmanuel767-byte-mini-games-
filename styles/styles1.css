@@ -44,8 +44,7 @@ margin-right: 15px;
     margin: 0 auto;
      }
 
-     .section-2>div, .flx-bx-PickColor-cntr {
-    
+     .section-2>div, .flx-bx-PickColor-cntr ,.blackjack-row2-deck,.blackjack-row1-results{
 
          display: flex;
          flex-wrap: wrap;
@@ -82,8 +81,42 @@ margin-right: 15px;
      
     /*   BLACK JACK    */
 
-    .blackjack-row2-deck{
+    .blackjack-row3-actions{
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        padding: 10px
+    }
+    .blackjack-row2-deck,.blackjack-row3-actions{
+
+        background-image: url("/static/images/bg-greenCardstable.jpg");
+         
+    }
+    .blackjack-row2-deck>div{
+        
+        text-align: center;
+        border: 1px solid black;
+        padding: 10px;
+        height: 360px;
+        flex: 1;
+    }
+
+    .blackjack-row2-deck>div>h3{
+        /* background-color: rgb(75, 59, 59); */
+        color: rgb(255, 235, 235);
+        font-weight: 700;
+        
+    }
+
+    .blackjack-row2-deck img{
+        width: 25%;
+        padding: 10px;
+    }
+
+    table, tr>th, tr>td{
+    border: 1.5px solid black ;
+    }
+
+    .blackjack-row3-actions>button{
+    
     }
