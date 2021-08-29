@@ -242,6 +242,42 @@ buttonRandom=()=>{
         all_btns[i].classList.add(Choices[randomNumber])
 
     }
-
-
 }
+
+
+//  <------------Black Jack ------------>
+/* 
+* Activate all buttons witha functonality respectively 
+* Have sound effects for diffent aspects of * buttons of the game
+    like when a player wins/lose i\u
+* display card when a button is clicked
+* Make results visisble int results table 
+* Create computer player gameplay  (Bot Player)
+*/
+
+
+
+let BlackJackgame= {
+"you": {'Resultspan': '#Your-result' , 'Div': '.Your-Bx' ,'Score': 0},
+"dealer": {'Resultspan': '#Dealer-result' , 'Div': '.Dealer-Bx','Score': 0}
+}
+const YOU = BlackJackgame["you"];
+const DEALER = BlackJackgame["dealer"];
+
+
+
+Blackjackhit=()=>{
+  //  alert('Ouch , you hit me!');
+    showCard(YOU);
+}
+
+showCard=(activePlayer)=>{
+    const HitSound = new Audio('/static/sounds/swish.m4a');
+    let CardImg = document.createElement("img");
+    CardImg.src= '/static/images/Q.png';
+    document.querySelector(activePlayer["Div"]).appendChild(CardImg);
+    HitSound.play();
+}
+
+/* BJ-hitBtn listen for event, if someone clicks this id (BJ-hitBtn) run fucntion Blackjackhit */
+document.querySelector('#BJ-hitBtn').addEventListener("click", Blackjackhit);

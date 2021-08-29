@@ -84,13 +84,16 @@ margin-right: 15px;
     .blackjack-row3-actions{
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
-        padding: 10px
+        justify-content: space-around;
+        padding: 5px
     }
-    .blackjack-row2-deck,.blackjack-row3-actions{
+    .blackjack-row2-deck{
 
-        background-image: url("/static/images/bg-greenCardstable.jpg");
+        background-image: url("/static/images/bg-greentable.jpg");
          
+    }
+    .blackjack-row3-actions{
+        background-image: url('/static/images/bg-greenCardstable.jpg');
     }
     .blackjack-row2-deck>div{
         
@@ -117,6 +120,4 @@ margin-right: 15px;
     border: 1.5px solid black ;
     }
 
-    .blackjack-row3-actions>button{
     
-    }
