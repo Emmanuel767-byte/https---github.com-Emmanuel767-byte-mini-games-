@@ -88,19 +88,20 @@ margin-right: 15px;
         padding: 5px
     }
     .blackjack-row2-deck{
-
-        background-image: url("/static/images/bg-greentable.jpg");
-         
+        display: flex;
+        flex-wrap: wrap;
+        background-image: url("/static/images/Background/bg-greentable.jpg");
+         overflow: hidden;
     }
     .blackjack-row3-actions{
-        background-image: url('/static/images/bg-greenCardstable.jpg');
+        background-image: url('/static/images/Background/bg-greenCardstable.jpg');
     }
     .blackjack-row2-deck>div{
         
         text-align: center;
         border: 1px solid black;
         padding: 10px;
-        height: 360px;
+        height: 450px;
         flex: 1;
     }
 

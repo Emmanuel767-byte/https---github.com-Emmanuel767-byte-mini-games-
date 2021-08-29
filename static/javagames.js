@@ -248,36 +248,103 @@ buttonRandom=()=>{
 //  <------------Black Jack ------------>
 /* 
 * Activate all buttons witha functonality respectively 
-* Have sound effects for diffent aspects of * buttons of the game
-    like when a player wins/lose i\u
+* Have sound effects for diffent aspects of * buttons of the game,  like when a player wins/lose i\u
 * display card when a button is clicked
 * Make results visisble int results table 
 * Create computer player gameplay  (Bot Player)
+* if Player score is more than 21 dont show cards and Score above 21
 */
 
 
 
 let BlackJackgame= {
 "you": {'Resultspan': '#Your-result' , 'Div': '.Your-Bx' ,'Score': 0},
-"dealer": {'Resultspan': '#Dealer-result' , 'Div': '.Dealer-Bx','Score': 0}
-}
+"dealer": {'Resultspan': '#Dealer-result' , 'Div': '.Dealer-Bx','Score': 0},
+"cards": ['2','3','4','5','6','7','8','9','10','A','J','K','Q'],
+"cardsMap": {'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'A':[1,11],'J':10,'K':10,'Q':10},
+};
 const YOU = BlackJackgame["you"];
 const DEALER = BlackJackgame["dealer"];
+const CARD = BlackJackgame["cards"];
 
 
 
 Blackjackhit=()=>{
-  //  alert('Ouch , you hit me!');
-    showCard(YOU);
+  /*
+    Show a random card when User or Pc selects Hit button
+  */
+    let card=RandomCard();
+    showCard(card,YOU);
+    updateScore(card, YOU)
+    console.log(card)
 }
-
-showCard=(activePlayer)=>{
-    const HitSound = new Audio('/static/sounds/swish.m4a');
+RandomCard=()=>{//
+    let randomIndex= Math.floor(Math.random() * 13);
+   // return BlackJackgame["cards"][randomIndex];
+    return CARD[randomIndex];
+ }
+showCard=(card, activePlayer)=>{
+    if (activePlayer["Score"] <= 21 ) {
+        const HitSound = new Audio('/static/sounds/swish.m4a');
     let CardImg = document.createElement("img");
-    CardImg.src= '/static/images/Q.png';
+    CardImg.src= `/static/images/${card}.png`;
+    CardImg.style.minHeight ='100px';
     document.querySelector(activePlayer["Div"]).appendChild(CardImg);
     HitSound.play();
+    }
+    
+}
+
+BlackjackDeal=()=>{
+    // find all images withing Your Box div
+    let YourImages = document.querySelector('.Your-Bx').querySelectorAll('img');
+    // find all images within Dealer Box div
+    let DealerImages = document.querySelector(".Dealer-Bx").querySelectorAll("img");
+    //YourImages[0].remove()// to remove each card in order of the first card [0] , one by one
+
+    for (i=0; i< YourImages.length; i++) {// this loop removes all cards at once
+        YourImages[i].remove();
+    }
+
+    for (i=0; i< DealerImages.length; i++) {// this loop removes all cards at once
+        DealerImages[i].remove();
+    }
+}
+
+
+/*
+Get activePlayer Score
+Increment score by cardsMap object using the keyds given
+*/
+
+updateScore=(card, activePlayer)=>{
+    activePlayer['Score'] += BlackJackgame["cardsMap"][card];
+    //get activeplayer score then add it by card number
+    // for ACE Card [1 ,11]
+    // if adding 11 keeps me under 21 then add , other wise add 1
+    // BlackJackgame["cardsMap"][card][1]  = array of A 
+    if (card="A"){
+        if (activePlayer["Score"] + BlackJackgame["cardsMap"][card][1] <= 21) {
+
+            activePlayer["Score"] += BlackJackgame["cardsMap"][card][1];//ADD 11 from A= ACE card
+        }   else{
+            activePlayer["Score"] += BlackJackgame["cardsMap"][card][0];//ADD  from A=ACE card
+        }
+         
+    } else {
+        activePlayer["Score"] += BlackJackgame["cardsMap"][card];
+    };
+
+
+    if (activePlayer["Score"]  > 21 ){
+        document.querySelector(activePlayer["Resultspan"]).textContent = 'BUST!';
+        document.querySelector(activePlayer["Resultspan"]).style.color= "red";
+    } else{
+         document.querySelector(activePlayer["Resultspan"]).textContent = activePlayer["Score"] ;
+    };
 }
 
 /* BJ-hitBtn listen for event, if someone clicks this id (BJ-hitBtn) run fucntion Blackjackhit */
 document.querySelector('#BJ-hitBtn').addEventListener("click", Blackjackhit);
+
+document.querySelector('#BJDeal-Btn').addEventListener("click", BlackjackDeal);
