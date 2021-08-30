@@ -271,12 +271,12 @@ const CARD = BlackJackgame["cards"];
 
 Blackjackhit=()=>{
   /*
-    Show a random card when User or Pc selects Hit button
-  */
+    Show a random card when User or Pc selects Hit button  */
     let card=RandomCard();
     showCard(card,YOU);
-    updateScore(card, YOU)
-    console.log(card)
+    updateScore(card, YOU);
+    console.log(YOU["Score"]);
+    showScore(YOU)
 }
 RandomCard=()=>{//
     let randomIndex= Math.floor(Math.random() * 13);
@@ -296,6 +296,7 @@ showCard=(card, activePlayer)=>{
 }
 
 BlackjackDeal=()=>{
+    ComputeWinner();
     // find all images withing Your Box div
     let YourImages = document.querySelector('.Your-Bx').querySelectorAll('img');
     // find all images within Dealer Box div
@@ -309,6 +310,16 @@ BlackjackDeal=()=>{
     for (i=0; i< DealerImages.length; i++) {// this loop removes all cards at once
         DealerImages[i].remove();
     }
+    // Reset scores to zero 0
+    YOU["Score"]=0;
+    DEALER["Score"]=0;
+    let  YourResult= document.querySelector("#Your-result");
+    let DealerResult= document.querySelector("#Dealer-result");
+    YourResult.textContent=0;
+    YourResult.style.color="#fff";
+    DealerResult.textContent=0;
+    DealerResult.style.color="#fff"
+    
 }
 
 
@@ -318,24 +329,27 @@ Increment score by cardsMap object using the keyds given
 */
 
 updateScore=(card, activePlayer)=>{
-    activePlayer['Score'] += BlackJackgame["cardsMap"][card];
     //get activeplayer score then add it by card number
     // for ACE Card [1 ,11]
     // if adding 11 keeps me under 21 then add , other wise add 1
     // BlackJackgame["cardsMap"][card][1]  = array of A 
-    if (card="A"){
+    //activePlayer['Score'] += BlackJackgame["cardsMap"][card];
+    if (card === 'A'){
         if (activePlayer["Score"] + BlackJackgame["cardsMap"][card][1] <= 21) {
-
-            activePlayer["Score"] += BlackJackgame["cardsMap"][card][1];//ADD 11 from A= ACE card
+          return  activePlayer["Score"] += BlackJackgame["cardsMap"][card][1];//ADD 11 from A= ACE card
         }   else{
-            activePlayer["Score"] += BlackJackgame["cardsMap"][card][0];//ADD  from A=ACE card
+            return activePlayer["Score"] += BlackJackgame["cardsMap"][card][0];//ADD  from A=ACE card
         }
          
     } else {
-        activePlayer["Score"] += BlackJackgame["cardsMap"][card];
+         activePlayer["Score"] += BlackJackgame["cardsMap"][card];
     };
 
 
+  
+}
+
+showScore=(activePlayer)=>{
     if (activePlayer["Score"]  > 21 ){
         document.querySelector(activePlayer["Resultspan"]).textContent = 'BUST!';
         document.querySelector(activePlayer["Resultspan"]).style.color= "red";
@@ -344,7 +358,50 @@ updateScore=(card, activePlayer)=>{
     };
 }
 
+DealerLogic=()=>{
+    let card=RandomCard();
+    showCard(card,DEALER);
+    updateScore(card, DEALER);
+    console.log(DEALER["Score"]);
+    showScore(DEALER);
+}
+
 /* BJ-hitBtn listen for event, if someone clicks this id (BJ-hitBtn) run fucntion Blackjackhit */
 document.querySelector('#BJ-hitBtn').addEventListener("click", Blackjackhit);
 
 document.querySelector('#BJDeal-Btn').addEventListener("click", BlackjackDeal);
+
+document.querySelector("#BJ-StandBtn").addEventListener("click", DealerLogic);
+
+
+/* Lets Compute the Wins , Losses and Draws 
+* And show it in the Results table
+*/
+
+ComputeWinner=()=>{
+    let Winner;
+//  Condition: if your Score have a higher score than Dealer OR || the Dealer bust and you're under 21
+
+    if (YOU["Score"]<=21){
+    if(YOU["Score"] > DEALER["Score"] || DEALER["Score"] > 21 ) {
+        alert("You WIN!");
+        Winner= YOU;
+    } else if (YOU["Score"]< DEALER["Score"]) {
+        alert("You Lose");
+        Winner=DEALER;
+    } else if (YOU["Score"] === DEALER["Score"]) {
+        alert("Its a Draw")
+    }
+    // Condition: If you bust , if you go over 21 but dealer doesnt
+    if (YOU["Score"] > 21 && DEALER["Score" <=21]) {
+        alert("You Lose");
+        window= DEALER;
+    
+    // Condition: if Both you and Dealer bust/go over 21
+    } else if (YOU["Score"] > 21 && DEALER["Score" > 21]) {
+        alert("You Drae")
+    }
+
+    return Winner;
+}
+}
