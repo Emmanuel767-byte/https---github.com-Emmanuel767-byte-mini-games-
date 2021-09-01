@@ -253,6 +253,9 @@ buttonRandom=()=>{
 * Make results visisble int results table 
 * Create computer player gameplay  (Bot Player)
 * if Player score is more than 21 dont show cards and Score above 21
+* Once a player hits "Stand" they should not be able to press "Hit"  or "Stand" afterwards
+* HIT buttonn should only work if "Stand" button isnt pressed yet
+*After "Deal" button is hit all buttons are able again
 */
 
 
@@ -262,21 +265,31 @@ let BlackJackgame= {
 "dealer": {'Resultspan': '#Dealer-result' , 'Div': '.Dealer-Bx','Score': 0},
 "cards": ['2','3','4','5','6','7','8','9','10','A','J','K','Q'],
 "cardsMap": {'2':2,'3':3,'4':4,'5':5,'6':6,'7':7,'8':8,'9':9,'10':10,'A':[1,11],'J':10,'K':10,'Q':10},
+"Wins" : 0,
+"Losses": 0,
+"Draws": 0,
+"IsStand?": false,
+"TurnsOver?": false,
+
 };
 const YOU = BlackJackgame["you"];
 const DEALER = BlackJackgame["dealer"];
 const CARD = BlackJackgame["cards"];
-
+const HitSound = new Audio('/static/sounds/swish.m4a');
+const winSound = new Audio('/static/sounds/cash.mp3');
+const lossSound = new Audio('/static/sounds/aww.mp3')
 
 
 Blackjackhit=()=>{
-  /*
-    Show a random card when User or Pc selects Hit button  */
+    
+    if (BlackJackgame["IsStand?"]===false){
+        /* Show a random card when User or Pc selects Hit button  */
     let card=RandomCard();
     showCard(card,YOU);
     updateScore(card, YOU);
-    console.log(YOU["Score"]);
+    //console.log(YOU["Score"]);
     showScore(YOU)
+    }    
 }
 RandomCard=()=>{//
     let randomIndex= Math.floor(Math.random() * 13);
@@ -285,10 +298,10 @@ RandomCard=()=>{//
  }
 showCard=(card, activePlayer)=>{
     if (activePlayer["Score"] <= 21 ) {
-        const HitSound = new Audio('/static/sounds/swish.m4a');
+        
     let CardImg = document.createElement("img");
     CardImg.src= `/static/images/${card}.png`;
-    CardImg.style.minHeight ='100px';
+    CardImg.style.height ='120px';
     document.querySelector(activePlayer["Div"]).appendChild(CardImg);
     HitSound.play();
     }
@@ -296,8 +309,11 @@ showCard=(card, activePlayer)=>{
 }
 
 BlackjackDeal=()=>{
-    ComputeWinner();
-    // find all images withing Your Box div
+    
+    if (BlackJackgame["TurnsOver?"]===true){
+        
+        BlackJackgame["IsStand?"]= false;
+        // find all images withing Your Box div
     let YourImages = document.querySelector('.Your-Bx').querySelectorAll('img');
     // find all images within Dealer Box div
     let DealerImages = document.querySelector(".Dealer-Bx").querySelectorAll("img");
@@ -318,7 +334,13 @@ BlackjackDeal=()=>{
     YourResult.textContent=0;
     YourResult.style.color="#fff";
     DealerResult.textContent=0;
-    DealerResult.style.color="#fff"
+    DealerResult.style.color="#fff";
+
+    document.querySelector("#blackjack-Result").textContent='Lets Play!';
+    document.querySelector("#blackjack-Result").style.color="black";
+    
+    BlackJackgame["TurnsOver?"]=true;
+    }
     
 }
 
@@ -359,11 +381,16 @@ showScore=(activePlayer)=>{
 }
 
 DealerLogic=()=>{
+    BlackJackgame["IsStand?"]=true;
     let card=RandomCard();
     showCard(card,DEALER);
     updateScore(card, DEALER);
-    console.log(DEALER["Score"]);
     showScore(DEALER);
+   // ShowResult();
+   if (DEALER["Score"] > 16){
+       BlackJackgame["TurnsOver?"]= true;
+    ShowResult(ComputeWinner()); 
+   }
 }
 
 /* BJ-hitBtn listen for event, if someone clicks this id (BJ-hitBtn) run fucntion Blackjackhit */
@@ -374,34 +401,64 @@ document.querySelector('#BJDeal-Btn').addEventListener("click", BlackjackDeal);
 document.querySelector("#BJ-StandBtn").addEventListener("click", DealerLogic);
 
 
-/* Lets Compute the Wins , Losses and Draws 
+/* Compute the winner and return who won 
+Lets Compute the Wins , Losses and Draws 
 * And show it in the Results table
 */
 
 ComputeWinner=()=>{
     let Winner;
-//  Condition: if your Score have a higher score than Dealer OR || the Dealer bust and you're under 21
 
     if (YOU["Score"]<=21){
-    if(YOU["Score"] > DEALER["Score"] || DEALER["Score"] > 21 ) {
-        alert("You WIN!");
-        Winner= YOU;
-    } else if (YOU["Score"]< DEALER["Score"]) {
-        alert("You Lose");
-        Winner=DEALER;
-    } else if (YOU["Score"] === DEALER["Score"]) {
-        alert("Its a Draw")
-    }
-    // Condition: If you bust , if you go over 21 but dealer doesnt
-    if (YOU["Score"] > 21 && DEALER["Score" <=21]) {
-        alert("You Lose");
-        window= DEALER;
-    
-    // Condition: if Both you and Dealer bust/go over 21
-    } else if (YOU["Score"] > 21 && DEALER["Score" > 21]) {
-        alert("You Drae")
-    }
-
-    return Winner;
+        //  Condition: if your Score have a higher score than Dealer OR || the Dealer bust and you're under 21
+        if(YOU["Score"] > DEALER["Score"] || DEALER["Score"] > 21 ) { 
+                BlackJackgame["Wins"]++;    
+                Winner= YOU;
+                } else if (YOU["Score"]< DEALER["Score"]) {
+                    BlackJackgame["Losses"]++;
+                    Winner=DEALER;
+                } else if (YOU["Score"] === DEALER["Score"]) {
+                    BlackJackgame["Draws"]++;
+               
+                }
+                // Condition: If you bust and the  dealer doesnt
+                if (YOU["Score"] > 21 && DEALER["Score" <=21]) {
+                    BlackJackgame["Losses"]++;
+                    Winner= DEALER;
+                
+                // Condition: if Both you and Dealer bust/go over 21
+                } else if (YOU["Score"] > 21 && DEALER["Score" > 21]) {
+                    BlackJackgame["Draws"]++;
+                }
+               // console.log('Winner is',Winner);
+        return Winner;
+        
 }
+    
+}
+
+ShowResult =(Winner)=>{
+
+    let message, messageColor;
+    if (BlackJackgame["TurnsOver?"]===true) {
+        if(Winner===YOU){
+            document.querySelector("#wins").textContent=BlackJackgame["Wins"];
+            message='YOU WIN!';
+            messageColor='green';
+            winSound.play();
+        } else if (Winner===DEALER){
+            document.querySelector("#losses").textContent=BlackJackgame["Losses"];
+            message="You Lose";
+            messageColor='red';
+            lossSound.play();
+        } else {
+            document.querySelector("#draws").textContent=BlackJackgame["Draws"];
+            message= "Its a Draw";
+            messageColor="yellow";
+        }
+    
+        document.querySelector("#blackjack-Result").textContent= message;
+        document.querySelector("#blackjack-Result").style.color= messageColor;
+    }
+   
 }
