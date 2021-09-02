@@ -380,18 +380,27 @@ showScore=(activePlayer)=>{
     };
 }
 
-DealerLogic=()=>{
-    BlackJackgame["IsStand?"]=true;
-    let card=RandomCard();
-    showCard(card,DEALER);
-    updateScore(card, DEALER);
-    showScore(DEALER);
-   // ShowResult();
-   if (DEALER["Score"] > 16){
-       BlackJackgame["TurnsOver?"]= true;
-    ShowResult(ComputeWinner()); 
-   }
+// want Bot ti wait for its turn and play its move after
+// CreATE A sleepfunction
+
+ Sleepfunction =(ms)=> {
+    return new Promise(resolve => setTimeout(resolve,ms));
 }
+ const DealerLogic= async ()=>{
+
+    BlackJackgame["IsStand?"]=true;
+    while (DEALER["Score"] < 16 && BlackJackgame["IsStand?"] === true){
+        
+        let card=RandomCard();
+        showCard(card,DEALER);
+        updateScore(card, DEALER);
+        showScore(DEALER);
+        await Sleepfunction(1000);
+    }
+        
+    BlackJackgame["TurnsOver?"]= true;
+    ShowResult(ComputeWinner()); 
+    }
 
 /* BJ-hitBtn listen for event, if someone clicks this id (BJ-hitBtn) run fucntion Blackjackhit */
 document.querySelector('#BJ-hitBtn').addEventListener("click", Blackjackhit);
@@ -420,20 +429,18 @@ ComputeWinner=()=>{
                 } else if (YOU["Score"] === DEALER["Score"]) {
                     BlackJackgame["Draws"]++;
                
-                }
+                } else  if (YOU["Score"] > 21 && DEALER["Score" <=21]) {
                 // Condition: If you bust and the  dealer doesnt
-                if (YOU["Score"] > 21 && DEALER["Score" <=21]) {
                     BlackJackgame["Losses"]++;
                     Winner= DEALER;
                 
-                // Condition: if Both you and Dealer bust/go over 21
-                } else if (YOU["Score"] > 21 && DEALER["Score" > 21]) {
-                    BlackJackgame["Draws"]++;
-                }
+                // // Condition: if Both you and Dealer bust/go over 21
+                // 
+                 }} else if (YOU["Score"] > 21 && DEALER["Score" > 21]) {
+                         BlackJackgame["Draws"]++;
                // console.log('Winner is',Winner);
-        return Winner;
-        
-}
+     }   
+       return Winner;
     
 }
 
